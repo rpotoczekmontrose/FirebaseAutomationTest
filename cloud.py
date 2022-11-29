@@ -38,26 +38,30 @@ def export_documents(project_id="testproject-c1950"):
     # Make the request
     print("Exporting...")
     operation = client.export_documents(request=request)
-    print(operation.result())
+    return operation.result().output_uri_prefix
 
 
 def import_documents(project_id="terra-scouts-us", backup_location=""):
     print("Importing...")
-
+    client = firestore_admin_v1.FirestoreAdminClient()
     # for some reason it doesn't work
-    # operation = client.import_documents(request=request)
-
-    token = (
-        subprocess.check_output(["gcloud", "auth", "print-access-token"], shell=True)
-        .decode(sys.stdout.encoding)
-        .strip()
+    request = firestore_admin_v1.ImportDocumentsRequest(
+        name=f"projects/{project_id}/databases/(default)",
+        input_uri_prefix=backup_location;
     )
+    operation = client.import_documents(request=request)
+    print(operation.result())
+    # token = (
+    #     subprocess.check_output(["gcloud", "auth", "print-access-token"], shell=True)
+    #     .decode(sys.stdout.encoding)
+    #     .strip()
+    # )
 
-    response = requests.post(
-        url=f"https://datastore.googleapis.com/v1/projects/{project_id}:import",
-        json={"inputUrl": backup_location},
-        headers={"Authorization": f"Bearer {token}"},
-    )
+    # response = requests.post(
+    #     url=f"https://datastore.googleapis.com/v1/projects/{project_id}:import",
+    #     json={"inputUrl": backup_location},
+    #     headers={"Authorization": f"Bearer {token}"},
+    # )
 
 
 def db_cleanup(app):
@@ -86,8 +90,8 @@ terra_app = firebase_admin.initialize_app(
     },
 )
 backup_cleanup(terra_app)
-export_documents("testproject-c1950")
-backup_location = f"gs://testproject-c1950.appspot.com/{list(storage.bucket(app=terra_app).list_blobs())[0].name}"
+backup_location = export_documents("testproject-c1950")
+#backup_location = f"gs://testproject-c1950.appspot.com/{list(storage.bucket(app=terra_app).list_blobs())[0].name}"
 
 terra_app = firebase_admin.initialize_app(
     name="worker", options={"projectId": "terra-scouts-us"}

@@ -1,7 +1,4 @@
 import firebase_admin
-import requests
-import sys
-import subprocess
 from firebase_admin import credentials
 from firebase_admin import firestore
 from firebase_admin import storage
@@ -50,18 +47,6 @@ def import_documents(project_id="terra-scouts-us", backup_location=""):
         input_uri_prefix=backup_location,
     )
     operation = client.import_documents(request=request)
-    print(operation.result())
-    # token = (
-    #     subprocess.check_output(["gcloud", "auth", "print-access-token"], shell=True)
-    #     .decode(sys.stdout.encoding)
-    #     .strip()
-    # )
-
-    # response = requests.post(
-    #     url=f"https://datastore.googleapis.com/v1/projects/{project_id}:import",
-    #     json={"inputUrl": backup_location},
-    #     headers={"Authorization": f"Bearer {token}"},
-    # )
 
 
 def db_cleanup(app):
@@ -91,7 +76,6 @@ terra_app = firebase_admin.initialize_app(
 )
 backup_cleanup(terra_app)
 backup_location = export_documents("testproject-c1950")
-# backup_location = f"gs://testproject-c1950.appspot.com/{list(storage.bucket(app=terra_app).list_blobs())[0].name}"
 
 terra_app = firebase_admin.initialize_app(
     name="worker", options={"projectId": "terra-scouts-us"}

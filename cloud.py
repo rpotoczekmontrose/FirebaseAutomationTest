@@ -47,7 +47,7 @@ def import_documents(project_id="terra-scouts-us", backup_location=""):
     # for some reason it doesn't work
     request = firestore_admin_v1.ImportDocumentsRequest(
         name=f"projects/{project_id}/databases/(default)",
-        input_uri_prefix=backup_location;
+        input_uri_prefix=backup_location,
     )
     operation = client.import_documents(request=request)
     print(operation.result())
@@ -91,7 +91,7 @@ terra_app = firebase_admin.initialize_app(
 )
 backup_cleanup(terra_app)
 backup_location = export_documents("testproject-c1950")
-#backup_location = f"gs://testproject-c1950.appspot.com/{list(storage.bucket(app=terra_app).list_blobs())[0].name}"
+# backup_location = f"gs://testproject-c1950.appspot.com/{list(storage.bucket(app=terra_app).list_blobs())[0].name}"
 
 terra_app = firebase_admin.initialize_app(
     name="worker", options={"projectId": "terra-scouts-us"}

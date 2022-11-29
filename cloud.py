@@ -37,7 +37,8 @@ def export_documents(project_id="testproject-c1950"):
 
     # Make the request
     print("Exporting...")
-    client.export_documents(request=request)
+    operation = client.export_documents(request=request)
+    print(operation.result())
 
 
 def import_documents(project_id="terra-scouts-us", backup_location=""):
@@ -70,7 +71,9 @@ def db_cleanup(app):
 def backup_cleanup(app):
     print("Storage Cleanup")
     bucket = storage.bucket(app=app)
-    bucket.delete_blobs(list(bucket.list_blobs()))
+    li = list(bucket.list_blobs())
+    print(li)
+    bucket.delete_blobs(li)
 
 
 # Use a service account.

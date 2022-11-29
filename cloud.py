@@ -76,6 +76,7 @@ def backup_cleanup(app):
     bucket.delete_blobs(li)
 
 
+print("start")
 # Use a service account.
 terra_app = firebase_admin.initialize_app(
     name="backup",

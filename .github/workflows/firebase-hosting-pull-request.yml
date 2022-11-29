@@ -21,6 +21,7 @@ jobs:
         with:
           workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
           service_account: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_TERRA_SCOUTS_US }}'
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
       - name: setup python
         uses: actions/setup-python@v2
         with:

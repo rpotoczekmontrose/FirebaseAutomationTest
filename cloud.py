@@ -70,6 +70,7 @@ def copy_storage():
     destination_storage = storage.Client(project="terra-scouts-us")
     # use default bucket
     destination_bucket = list(destination_storage.list_buckets())[0]
+    print(destination_bucket)
     # cleanup
     for blob in list(destination_bucket.list_blobs()):
         blob.delete(force=True)

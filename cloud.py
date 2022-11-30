@@ -102,6 +102,6 @@ terra_app = firebase_admin.initialize_app(
 )
 copy_storage()
 backup_location = export_documents("testproject-c1950")
-db_cleanup(backup_location)
+db_cleanup()
 import_documents("terra-scouts-us", backup_location)
-backup_cleanup(terra_app)
+backup_cleanup(backup_location)

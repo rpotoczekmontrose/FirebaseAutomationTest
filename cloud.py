@@ -71,9 +71,7 @@ def copy_storage():
     # cleanup
     for bucket in list(destination_storage.list_buckets()):
         bucket.delete(force=True)
-    destination_bucket = destination_storage.create_bucket(
-        "terra-scouts-us.appspot.com"
-    )
+    destination_bucket = destination_storage.create_bucket("(default)")
     # copying
     for bucket in list(source_storage.list_buckets()):
         for blob in bucket.list_blobs():

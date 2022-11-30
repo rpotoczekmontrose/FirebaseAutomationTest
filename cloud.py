@@ -69,11 +69,11 @@ def copy_storage():
 
     destination_storage = storage.Client(project="terra-scouts-us")
     # cleanup
-    for bucket in destination_storage.list_buckets():
+    for bucket in list(destination_storage.list_buckets()):
         bucket.delete()
     destination_bucket = destination_storage.create_bucket(None)
     # copying
-    for bucket in source_storage.list_buckets():
+    for bucket in list(source_storage.list_buckets()):
         for blob in bucket.list_blobs():
             source_storage.copy_blob(blob, destination_bucket)
 

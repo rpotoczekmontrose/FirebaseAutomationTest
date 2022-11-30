@@ -74,7 +74,7 @@ def copy_storage():
     for blob in list(destination_bucket.list_blobs()):
         blob.delete(force=True)
     # copying
-    source_bucket = storage.Bucket(source_storage)
+    source_bucket = storage.Bucket(source_storage, "testproject-c1950.appspot.com")
     print(list(source_bucket.list_blobs()))
     for blob in list(source_bucket.list_blobs()):
         source_storage.copy_blob(blob, destination_bucket)

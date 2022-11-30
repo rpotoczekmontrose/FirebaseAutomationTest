@@ -1,6 +1,6 @@
 from google.cloud import firestore_admin_v1
 from google.cloud import storage
-
+from google.cloud import firestore
 
 # [START delete_collection]
 def delete_collection(coll_ref, batch_size):
@@ -47,11 +47,7 @@ def import_documents(project_id="terra-scouts-us", backup_location=""):
 
 
 def db_cleanup():
-    # Create a client
-    client = firestore_admin_v1.FirestoreAdminClient()
-
-    # Make the request
-    db = client.get_database(name="projects/terra-scouts-us/databases/(default)")
+    db = firestore.Client(project="terra-scouts-us")
 
     for coll_ref in db.collections():
         delete_collection(coll_ref, 100)

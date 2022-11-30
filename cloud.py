@@ -35,18 +35,19 @@ def export_documents(project_id="testproject-c1950"):
     return operation.result().output_uri_prefix
 
 
-def import_documents(project_id="terra-scouts-us", backup_location=""):
+def import_documents(project_id="terra-scouts-us", input_uri_prefix=""):
     print("Importing...")
     client = firestore_admin_v1.FirestoreAdminClient()
     # for some reason it doesn't work
     request = firestore_admin_v1.ImportDocumentsRequest(
         name=f"projects/{project_id}/databases/(default)",
-        input_uri_prefix=backup_location,
+        input_uri_prefix=input_uri_prefix,
     )
     client.import_documents(request=request)
 
 
 def db_cleanup():
+    print("db cleanup")
     db = firestore.Client(project="terra-scouts-us")
 
     for coll_ref in db.collections():
@@ -61,29 +62,33 @@ def backup_cleanup(backup_location: str):
     bucket = storage.Bucket(backup_storage, "testproject-c1950.appspot.com")
     for blob in list(bucket.list_blobs()):
         if time_stamp in blob.name:
+            print("cleanup backup: " + blob.name)
             blob.delete()
 
 
 def copy_storage():
+    print("Copy storage data")
     destination_storage = storage.Client(project="terra-scouts-us")
     # use default bucket
     destination_bucket = storage.Bucket(
         destination_storage, "terra-scouts-us.appspot.com"
     )
     # cleanup
+    print("Storage cleanup...")
     for blob in list(destination_bucket.list_blobs()):
+        print("deleting: " + blob.name)
         blob.delete()
     # copying
     source_bucket = storage.Bucket(destination_storage, "testproject-c1950.appspot.com")
     for blob in list(source_bucket.list_blobs()):
+        print("copying: " + blob.name)
         source_bucket.copy_blob(blob, destination_bucket)
 
 
 print("start")
-# Use a service account.
-
 copy_storage()
-backup_location = export_documents("testproject-c1950")
+uri_prefix = export_documents("testproject-c1950")
+print("uri prefix: " + uri_prefix)
 db_cleanup()
-import_documents("terra-scouts-us", backup_location)
-backup_cleanup(backup_location)
+import_documents("terra-scouts-us", uri_prefix)
+backup_cleanup(uri_prefix)

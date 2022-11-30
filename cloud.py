@@ -1,8 +1,6 @@
-import firebase_admin
-from firebase_admin import firestore
-
 from google.cloud import firestore_admin_v1
 from google.cloud import storage
+
 
 # [START delete_collection]
 def delete_collection(coll_ref, batch_size):
@@ -52,14 +50,8 @@ def db_cleanup():
     # Create a client
     client = firestore_admin_v1.FirestoreAdminClient()
 
-    # Initialize request argument(s)
-    request = firestore_admin_v1.GetDatabaseRequest(
-        name="(default)",
-    )
-
     # Make the request
-    response = client.get_database(request=request)
-    from google.cloud.firestore_admin_v1.types import database
+    response = client.get_database(name="projects/terra-scouts-us/databases/(default)")
 
     # Handle the response
     print(response)

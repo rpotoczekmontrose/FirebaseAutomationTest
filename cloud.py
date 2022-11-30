@@ -2,7 +2,7 @@ import firebase_admin
 from firebase_admin import firestore
 
 from google.cloud import firestore_admin_v1
-from google.cloud import storage, firestore_admin_v1
+from google.cloud import storage
 
 # [START delete_collection]
 def delete_collection(coll_ref, batch_size):
@@ -49,33 +49,44 @@ def import_documents(project_id="terra-scouts-us", backup_location=""):
 
 
 def db_cleanup(app):
-    print("DB Cleanup")
-    db = firestore.client(app)
+    # Create a client
+    client = firestore_admin_v1.FirestoreAdminClient()
 
+    # Initialize request argument(s)
+    request = firestore_admin_v1.GetDatabaseRequest(
+        name="(default)",
+    )
+
+    # Make the request
+    response = client.get_database(request=request)
+    from google.cloud.firestore_admin_v1.types import database
+
+    # Handle the response
+    print(response)
+
+    db = client.get_database(request)
     for coll_ref in db.collections():
         delete_collection(coll_ref, 100)
 
 
-def backup_cleanup(app):
+def backup_cleanup():
     print("Storage Cleanup")
-    bucket = storage.bucket(app=app)
-    li = list(bucket.list_blobs())
-    print(li)
-    bucket.delete_blobs(li)
+    backup_storage = storage.Client(project="testproject-c1950")
+    bucket = storage.Bucket(backup_storage, "terra-scouts-us.appspot.com")
+    bucket.get_blob()
 
 
 def copy_storage():
-    source_storage = storage.Client(project="testproject-c1950")
-
     destination_storage = storage.Client(project="terra-scouts-us")
     # use default bucket
-    destination_bucket = storage.Bucket(source_storage, "terra-scouts-us.appspot.com")
+    destination_bucket = storage.Bucket(
+        destination_storage, "terra-scouts-us.appspot.com"
+    )
     # cleanup
     for blob in list(destination_bucket.list_blobs()):
         blob.delete(force=True)
     # copying
-    source_bucket = storage.Bucket(source_storage, "testproject-c1950.appspot.com")
-    print(list(source_bucket.list_blobs()))
+    source_bucket = storage.Bucket(destination_storage, "testproject-c1950.appspot.com")
     for blob in list(source_bucket.list_blobs()):
         source_bucket.copy_blob(blob, destination_bucket)
 
@@ -89,13 +100,9 @@ terra_app = firebase_admin.initialize_app(
         "storageBucket": "testproject-c1950.appspot.com",
     },
 )
-# backup_cleanup(terra_app)
 copy_storage()
+
 backup_location = export_documents("testproject-c1950")
-
-terra_app = firebase_admin.initialize_app(
-    name="worker", options={"projectId": "terra-scouts-us"}
-)
-
+backup_cleanup(terra_app)
 db_cleanup(terra_app)
 import_documents("terra-scouts-us", backup_location)

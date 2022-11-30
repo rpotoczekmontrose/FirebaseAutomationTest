@@ -1,9 +1,8 @@
 import firebase_admin
-from firebase_admin import credentials
 from firebase_admin import firestore
-from firebase_admin import storage
+
 from google.cloud import firestore_admin_v1
-from google.cloud import client
+from google.cloud import storage, firestore_admin_v1
 
 # [START delete_collection]
 def delete_collection(coll_ref, batch_size):
@@ -65,6 +64,20 @@ def backup_cleanup(app):
     bucket.delete_blobs(li)
 
 
+def copy_storage():
+    source_storage = storage.Client(project="testproject-c1950")
+
+    destination_storage = storage.Client(project="terra-scouts-us")
+    # cleanup
+    for bucket in destination_storage.list_buckets():
+        bucket.delete()
+    destination_bucket = destination_storage.create_bucket(None)
+    # copying
+    for bucket in source_storage.list_buckets():
+        for blob in bucket.list_blobs():
+            source_storage.copy_blob(blob, destination_bucket)
+
+
 print("start")
 # Use a service account.
 terra_app = firebase_admin.initialize_app(
@@ -74,7 +87,8 @@ terra_app = firebase_admin.initialize_app(
         "storageBucket": "testproject-c1950.appspot.com",
     },
 )
-backup_cleanup(terra_app)
+# backup_cleanup(terra_app)
+copy_storage()
 backup_location = export_documents("testproject-c1950")
 
 terra_app = firebase_admin.initialize_app(

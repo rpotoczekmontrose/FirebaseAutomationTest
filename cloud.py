@@ -43,7 +43,8 @@ def import_documents(project_id="terra-scouts-us", input_uri_prefix=""):
         name=f"projects/{project_id}/databases/(default)",
         input_uri_prefix=input_uri_prefix,
     )
-    client.import_documents(request=request)
+    operation = client.import_documents(request=request)
+    return operation.result()
 
 
 def db_cleanup():

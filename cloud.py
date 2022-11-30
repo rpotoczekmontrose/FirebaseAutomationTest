@@ -45,10 +45,10 @@ def import_documents(project_id="terra-scouts-us", backup_location=""):
         name=f"projects/{project_id}/databases/(default)",
         input_uri_prefix=backup_location,
     )
-    operation = client.import_documents(request=request)
+    client.import_documents(request=request)
 
 
-def db_cleanup(app):
+def db_cleanup():
     # Create a client
     client = firestore_admin_v1.FirestoreAdminClient()
 
@@ -69,11 +69,11 @@ def db_cleanup(app):
         delete_collection(coll_ref, 100)
 
 
-def backup_cleanup():
+def backup_cleanup(backup_location):
     print("Storage Cleanup")
     backup_storage = storage.Client(project="testproject-c1950")
-    bucket = storage.Bucket(backup_storage, "terra-scouts-us.appspot.com")
-    bucket.get_blob()
+    bucket = storage.Bucket(backup_storage, "testproject-c1950.appspot.com")
+    bucket.get_blob(backup_location).delete()
 
 
 def copy_storage():
@@ -101,8 +101,7 @@ terra_app = firebase_admin.initialize_app(
     },
 )
 copy_storage()
-
 backup_location = export_documents("testproject-c1950")
-backup_cleanup(terra_app)
-db_cleanup(terra_app)
+db_cleanup(backup_location)
 import_documents("terra-scouts-us", backup_location)
+backup_cleanup(terra_app)

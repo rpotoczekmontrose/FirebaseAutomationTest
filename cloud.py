@@ -51,12 +51,8 @@ def db_cleanup():
     client = firestore_admin_v1.FirestoreAdminClient()
 
     # Make the request
-    response = client.get_database(name="projects/terra-scouts-us/databases/(default)")
+    db = client.get_database(name="projects/terra-scouts-us/databases/(default)")
 
-    # Handle the response
-    print(response)
-
-    db = client.get_database(request)
     for coll_ref in db.collections():
         delete_collection(coll_ref, 100)
 
@@ -85,13 +81,7 @@ def copy_storage():
 
 print("start")
 # Use a service account.
-terra_app = firebase_admin.initialize_app(
-    name="backup",
-    options={
-        "projectId": "testproject-c1950",
-        "storageBucket": "testproject-c1950.appspot.com",
-    },
-)
+
 copy_storage()
 backup_location = export_documents("testproject-c1950")
 db_cleanup()

@@ -61,8 +61,7 @@ def backup_cleanup(backup_location: str):
     bucket = storage.Bucket(backup_storage, "testproject-c1950.appspot.com")
     for blob in list(bucket.list_blobs()):
         if time_stamp in blob.name:
-            print(blob.name)
-        # blob.delete()
+            blob.delete()
 
 
 def copy_storage():

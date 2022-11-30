@@ -57,7 +57,8 @@ def backup_cleanup(backup_location):
     print("Storage Cleanup")
     backup_storage = storage.Client(project="testproject-c1950")
     bucket = storage.Bucket(backup_storage, "testproject-c1950.appspot.com")
-    bucket.get_blob(backup_location).delete()
+    print(backup_location)
+    # bucket.get_blob(backup_location).delete()
 
 
 def copy_storage():

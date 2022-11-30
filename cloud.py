@@ -53,12 +53,16 @@ def db_cleanup():
         delete_collection(coll_ref, 100)
 
 
-def backup_cleanup(backup_location):
+def backup_cleanup(backup_location: str):
     print("Storage Cleanup")
+    parts = backup_location.split("/")
+    time_stamp = parts[len(parts) - 1]
     backup_storage = storage.Client(project="testproject-c1950")
     bucket = storage.Bucket(backup_storage, "testproject-c1950.appspot.com")
-    print(backup_location)
-    # bucket.get_blob(backup_location).delete()
+    for blob in list(bucket.list_blobs()):
+        if time_stamp in blob.name:
+            print(blob.name)
+        # blob.delete()
 
 
 def copy_storage():

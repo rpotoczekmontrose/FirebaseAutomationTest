@@ -68,16 +68,15 @@ def copy_storage():
     source_storage = storage.Client(project="testproject-c1950")
 
     destination_storage = storage.Client(project="terra-scouts-us")
+    # use default bucket
+    destination_bucket = list(destination_storage.list_buckets())[0]
     # cleanup
-    for bucket in list(destination_storage.list_buckets()):
-        bucket.delete(force=True)
-    destination_bucket = destination_storage.create_bucket(
-        "terra-scouts-us.appspot.com"
-    )
+    for blob in list(destination_bucket.list_blobs()):
+        blob.delete(force=True)
     # copying
-    for bucket in list(source_storage.list_buckets()):
-        for blob in bucket.list_blobs():
-            source_storage.copy_blob(blob, destination_bucket)
+    source_bucket = list(source_storage.list_buckets())[0]
+    for blob in source_bucket.list_blobs():
+        source_storage.copy_blob(blob, destination_bucket)
 
 
 print("start")

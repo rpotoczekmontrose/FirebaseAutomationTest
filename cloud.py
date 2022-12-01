@@ -93,15 +93,16 @@ def copy_storage():
 
 def get_public_key():
     token = os.environ["GITHUB_TOKEN"]
-    response = requests.get(
-        url="https://api.github.com/repos/rpotoczekmontrose/FirebaseAutomationTest/actions/secrets/public-key",
-        headers={
-            "Accept": "application/vnd.github+json",
-            "Authorization": f"Bearer {token}",
-        },
-    )
-    print(response.content)
-    return json.loads(response.content)["key"]
+    # response = requests.get(
+    #     url="https://api.github.com/repos/rpotoczekmontrose/FirebaseAutomationTest/actions/secrets/public-key",
+    #     headers={
+    #         "Accept": "application/vnd.github+json",
+    #         "Authorization": f"Bearer {token}",
+    #     },
+    # )
+    # print(response.content)
+    # return json.loads(response.content)["key"]
+    return os.environ["PUBLIC_KEY"]
 
 
 def encrypt(public_key: str, secret_value: str) -> str:

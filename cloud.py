@@ -34,7 +34,7 @@ def get_worker_name():
         client = firestore.Client(project=worker_name)
         li = list(client.collection("WorkerAvailability").list_documents())
         for doc in li:
-            print(doc.get().to_dict())
+            print(doc.get().to_dict()["isFree"])
         val = (
             client.collection("WorkerAvailability").document().get().to_dict()["isFree"]
         )

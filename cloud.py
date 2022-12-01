@@ -92,6 +92,7 @@ def copy_storage():
 
 
 def get_public_key():
+    token = os.environ["GITHUB_TOKEN"]
     response = requests.get(
         url="https://api.github.com/repositories/FirebaseAutomationTest/environments/Workers_env/secrets/public-key",
         headers={

@@ -94,7 +94,7 @@ def copy_storage():
 def get_public_key():
     token = os.environ["GITHUB_TOKEN"]
     response = requests.get(
-        url="https://api.github.com/repositories/FirebaseAutomationTest/environments/Workers_env/secrets/public-key",
+        url="https://api.github.com/repos/rpotoczekmontrose/FirebaseAutomationTest/actions/secrets/public-key",
         headers={
             "Accept": "application/vnd.github+json",
             "Authorization": f"Bearer {token}",
@@ -117,7 +117,7 @@ def get_workers():
     simple = {"key": "value"}
     st = encrypt(get_public_key(), json.dumps(simple))
     requests.put(
-        url="https://api.github.com/repositories/FirebaseAutomationTest/environments/Workers_env/secrets/SECRET_NAME",
+        url="https://api.github.com/repos/rpotoczekmontrose/FirebaseAutomationTest/actions/secrets/SECRET_NAME",
         headers={
             "Accept": "application/vnd.github+json",
             "Authorization": f"Bearer {token}",

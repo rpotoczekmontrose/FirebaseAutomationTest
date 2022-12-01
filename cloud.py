@@ -6,6 +6,7 @@ import os
 from base64 import b64encode
 from nacl import encoding, public
 import json
+
 # [START delete_collection]
 def delete_collection(coll_ref, batch_size):
     docs = coll_ref.list_documents(page_size=batch_size)
@@ -91,36 +92,35 @@ def copy_storage():
 
 
 def get_public_key():
-    response = requests.get(url="https://api.github.com/repositories/FirebaseAutomationTest/environments/Workers_env/secrets/public-key",
-                            headers={
-                                        "Accept": "application/vnd.github+json",
-                                        "Authorization": f"Bearer {token}",
-                                    })
-    return json.loads(response.content)["key"]
-
-  
-def encrypt(public_key: str, secret_value: str) -> str:
-  """Encrypt a Unicode string using the public key."""
-  public_key = public.PublicKey(public_key.encode("utf-8"), encoding.Base64Encoder())
-  sealed_box = public.SealedBox(public_key)
-  encrypted = sealed_box.encrypt(secret_value.encode("utf-8"))
-  return b64encode(encrypted).decode("utf-8")
-
-def get_workers():
-    token = os.environ["GITHUB_TOKEN"]
-    simple = {
-        "key": "value"
-    }
-    st = encrypt(get_public_key(), json.dumps(simple))
-    requests.put(url="https://api.github.com/repositories/FirebaseAutomationTest/environments/Workers_env/secrets/SECRET_NAME"
+    response = requests.get(
+        url="https://api.github.com/repositories/FirebaseAutomationTest/environments/Workers_env/secrets/public-key",
         headers={
             "Accept": "application/vnd.github+json",
             "Authorization": f"Bearer {token}",
         },
-        data={
-            "encrypted_value": f"{st}",
-            "key_id":"012345678912345678"
-        }
+    )
+    return json.loads(response.content)["key"]
+
+
+def encrypt(public_key: str, secret_value: str) -> str:
+    """Encrypt a Unicode string using the public key."""
+    public_key = public.PublicKey(public_key.encode("utf-8"), encoding.Base64Encoder())
+    sealed_box = public.SealedBox(public_key)
+    encrypted = sealed_box.encrypt(secret_value.encode("utf-8"))
+    return b64encode(encrypted).decode("utf-8")
+
+
+def get_workers():
+    token = os.environ["GITHUB_TOKEN"]
+    simple = {"key": "value"}
+    st = encrypt(get_public_key(), json.dumps(simple))
+    requests.put(
+        url="https://api.github.com/repositories/FirebaseAutomationTest/environments/Workers_env/secrets/SECRET_NAME",
+        headers={
+            "Accept": "application/vnd.github+json",
+            "Authorization": f"Bearer {token}",
+        },
+        data={"encrypted_value": f"{st}", "key_id": "012345678912345678"},
     )
 
 

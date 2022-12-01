@@ -34,7 +34,7 @@ def get_worker_name():
         client = firestore.Client(project=worker_name)
         doc = list(client.collection("WorkerAvailability").list_documents())[0]
         doc_dict = doc.get().to_dict()
-        print("Value: " + doc_dict["isFree"])
+        print("Value: " + str(doc_dict["isFree"]))
         if doc_dict["isFree"] == True:
             doc_dict["isFree"] = False
             client.collection().document().update(doc_dict)

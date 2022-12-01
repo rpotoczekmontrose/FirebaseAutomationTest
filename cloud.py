@@ -32,13 +32,12 @@ def delete_collection(coll_ref, batch_size):
 def get_worker_name():
     for worker_name in workers_names:
         client = firestore.Client(project=worker_name)
-        val = (
-            list(client.collection("WorkerAvailability").list_documents())[0]
-            .get()
-            .to_dict()["isFree"]
-        )
-        print("Value: " + val)
-        if val == True:
+        doc = list(client.collection("WorkerAvailability").list_documents())[0]
+        doc_dict = doc.get().to_dict()
+        print("Value: " + doc_dict["isFree"])
+        if doc_dict["isFree"] == True:
+            doc_dict["isFree"] = False
+            client.collection().document().update(doc_dict)
             return worker_name
 
 

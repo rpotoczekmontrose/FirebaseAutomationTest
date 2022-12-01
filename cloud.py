@@ -100,6 +100,7 @@ def get_public_key():
             "Authorization": f"Bearer {token}",
         },
     )
+    print(response.content)
     return json.loads(response.content)["key"]
 
 

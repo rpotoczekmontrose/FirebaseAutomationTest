@@ -6,6 +6,7 @@ import os
 from base64 import b64encode
 from nacl import encoding, public
 import json
+import subprocess
 
 workers_names = [
     # "testproject2-151a9",
@@ -29,16 +30,24 @@ def delete_collection(coll_ref, batch_size):
 # [END delete_collection]
 
 
-def get_worker_name():
+def change_worker_state(worker_name: str, new_state: bool):
+    client = firestore.Client(project=worker_name)
+    doc = list(client.collection("WorkerAvailability").list_documents())[0]
+    doc_dict = doc.get().to_dict()
+    doc_dict["isFree"] = new_state
+    doc.update(doc_dict)
+
+
+def get_free_worker_name():
     for worker_name in workers_names:
         client = firestore.Client(project=worker_name)
         doc = list(client.collection("WorkerAvailability").list_documents())[0]
         doc_dict = doc.get().to_dict()
-        print("Value: " + str(doc_dict["isFree"]))
         if doc_dict["isFree"] == True:
-            doc_dict["isFree"] = False
-            client.collection().document().update(doc_dict)
+            change_worker_state(worker_name, False)
             return worker_name
+        else:
+            print("Worker: " + worker_name + " busy...")
 
 
 def export_documents(source_project_id="terra-scouts-us"):
@@ -110,12 +119,31 @@ def copy_storage(worker_name):
         source_bucket.copy_blob(blob, destination_bucket)
 
 
+def deploy(worker_project_id):
+    token = os.environ["GITHUB_TOKEN"]
+    response = requests.get(
+        url=f"https://firebasehosting.googleapis.com/v1beta1/sites/{worker_project_id}/versions",
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {token}",
+        },
+        data={
+            "config": {
+                "headers": [
+                    {"glob": "**", "headers": {"Cache-Control": "max-age=1800"}}
+                ]
+            }
+        },
+    )
+    print(response.content)
+
+
 print("start")
-worker_name = get_worker_name()
-print(worker_name)
+worker_name = get_free_worker_name()
 copy_storage(worker_name)
 uri_prefix = export_documents("terra-scouts-us")
 print("uri prefix: " + uri_prefix)
 db_cleanup(worker_name)
 import_documents(worker_name, uri_prefix)
 backup_cleanup(uri_prefix)
+deploy(worker_name)

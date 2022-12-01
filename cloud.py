@@ -7,7 +7,10 @@ from base64 import b64encode
 from nacl import encoding, public
 import json
 
-workers_names = ["testproject2-151a9", "testproject-c1950"]
+workers_names = [
+    # "testproject2-151a9",
+    "testproject-c1950"
+]
 
 # [START delete_collection]
 def delete_collection(coll_ref, batch_size):

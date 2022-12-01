@@ -1,6 +1,7 @@
 from google.cloud import firestore_admin_v1
 from google.cloud import storage
 from google.cloud import firestore
+import subprocess
 
 # [START delete_collection]
 def delete_collection(coll_ref, batch_size):
@@ -86,10 +87,31 @@ def copy_storage():
         source_bucket.copy_blob(blob, destination_bucket)
 
 
+def get_workers():
+    print(
+        subprocess.check_output(
+            [
+                "gh",
+                "api",
+                "--method",
+                "PUT",
+                "-H",
+                "Accept: application/vnd.github+json",
+                "/repositories/FirebaseAutomationTest/environments/Workers_env/secrets/SECRET_NAME",
+                "-f",
+                "encrypted_value='c2VjcmV0'",
+                "-f",
+                "key_id='012345678912345678'",
+            ]
+        )
+    )
+
+
 print("start")
-copy_storage()
-uri_prefix = export_documents("testproject-c1950")
-print("uri prefix: " + uri_prefix)
-db_cleanup()
-import_documents("terra-scouts-us", uri_prefix)
-backup_cleanup(uri_prefix)
+get_workers()
+# copy_storage()
+# uri_prefix = export_documents("testproject-c1950")
+# print("uri prefix: " + uri_prefix)
+# db_cleanup()
+# import_documents("terra-scouts-us", uri_prefix)
+# backup_cleanup(uri_prefix)

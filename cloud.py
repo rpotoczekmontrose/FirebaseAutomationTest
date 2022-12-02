@@ -15,6 +15,8 @@ workers_names = [
 
 # [START delete_collection]
 def delete_collection(coll_ref, batch_size):
+
+    print(f"Deleting collection: {coll_ref.id}")
     docs = coll_ref.list_documents(page_size=batch_size)
     deleted = 0
 
@@ -81,8 +83,10 @@ def import_documents(worker_id, input_uri_prefix=""):
 def db_cleanup(worker_name):
     print("db cleanup")
     db = firestore.Client(project=worker_name)
-
     for coll_ref in db.collections():
+        db.collection().get()
+        if "WorkerAvailability" in coll_ref.id:
+            continue
         delete_collection(coll_ref, 100)
 
 
@@ -108,8 +112,6 @@ def copy_storage(worker_name):
     # cleanup
     print("Storage cleanup...")
     for blob in list(destination_bucket.list_blobs()):
-        if "WorkerAvailability" in blob.name:
-            continue
         print("deleting: " + blob.name)
         blob.delete()
     # copying

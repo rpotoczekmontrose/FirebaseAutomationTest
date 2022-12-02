@@ -121,7 +121,8 @@ def copy_storage(worker_name):
 
 
 def deploy(worker_project_id):
-    token = os.environ["GITHUB_TOKEN"]
+    # token = os.environ["GITHUB_TOKEN"]
+    token = subprocess.check_output(["gcloud", "auth", "print-access-token"])
     response = requests.post(
         url=f"https://firebasehosting.googleapis.com/v1beta1/sites/{worker_project_id}/versions",
         headers={
@@ -148,3 +149,4 @@ db_cleanup(worker_name)
 import_documents(worker_name, uri_prefix)
 backup_cleanup(uri_prefix)
 deploy(worker_name)
+change_worker_state(worker_name, True)

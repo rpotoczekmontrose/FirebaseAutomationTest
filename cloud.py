@@ -147,6 +147,7 @@ try:
     deploy(worker_name)
 except:
     if worker_name is not None:
+        print("restoring worker state")
         change_worker_state(worker_name, True)
     else:
         print("No free worker")

@@ -122,7 +122,7 @@ def copy_storage(worker_name):
 
 def deploy(worker_project_id):
     token = os.environ["GITHUB_TOKEN"]
-    response = requests.get(
+    response = requests.post(
         url=f"https://firebasehosting.googleapis.com/v1beta1/sites/{worker_project_id}/versions",
         headers={
             "Content-Type": "application/json",

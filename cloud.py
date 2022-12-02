@@ -8,10 +8,7 @@ from nacl import encoding, public
 import json
 import subprocess
 
-workers_names = [
-    # "testproject2-151a9",
-    "testproject-c1950"
-]
+workers_names = ["testproject2-151a9", "testproject-c1950"]
 
 # [START delete_collection]
 def delete_collection(coll_ref, batch_size):
@@ -133,25 +130,8 @@ def _get_access_token():
 
 
 def deploy(worker_project_id):
-    # token = os.environ["GITHUB_TOKEN"]
     subprocess.run(["firebase", "use", worker_project_id])
     subprocess.run(["firebase", "deploy", "--only", "hosting"])
-    # token = subprocess.check_output(["gcloud", "auth", "print-access-token"])
-    # response = requests.post(
-    #     url=f"https://firebasehosting.googleapis.com/v1beta1/sites/{worker_project_id}/versions",
-    #     headers={
-    #         "Content-Type": "application/json",
-    #         "Authorization": f"Bearer {token}",
-    #     },
-    #     data={
-    #         "config": {
-    #             "headers": [
-    #                 {"glob": "**", "headers": {"Cache-Control": "max-age=1800"}}
-    #             ]
-    #         }
-    #     },
-    # )
-    # print(response.content)
 
 
 print("start")

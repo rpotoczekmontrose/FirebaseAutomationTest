@@ -117,18 +117,6 @@ def copy_storage(worker_name):
         source_bucket.copy_blob(blob, destination_bucket)
 
 
-def _get_access_token():
-    """Retrieve a valid access token that can be used to authorize requests.
-
-    :return: Access token.
-    """
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(
-        "service-account.json", SCOPES
-    )
-    access_token_info = credentials.get_access_token()
-    return access_token_info.access_token
-
-
 def deploy(worker_project_id):
     subprocess.run(["firebase", "use", worker_project_id])
     subprocess.run(["firebase", "deploy", "--only", "hosting"])

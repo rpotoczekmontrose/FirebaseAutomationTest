@@ -120,24 +120,38 @@ def copy_storage(worker_name):
         source_bucket.copy_blob(blob, destination_bucket)
 
 
+def _get_access_token():
+    """Retrieve a valid access token that can be used to authorize requests.
+
+    :return: Access token.
+    """
+    credentials = ServiceAccountCredentials.from_json_keyfile_name(
+        "service-account.json", SCOPES
+    )
+    access_token_info = credentials.get_access_token()
+    return access_token_info.access_token
+
+
 def deploy(worker_project_id):
     # token = os.environ["GITHUB_TOKEN"]
-    token = subprocess.check_output(["gcloud", "auth", "print-access-token"])
-    response = requests.post(
-        url=f"https://firebasehosting.googleapis.com/v1beta1/sites/{worker_project_id}/versions",
-        headers={
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {token}",
-        },
-        data={
-            "config": {
-                "headers": [
-                    {"glob": "**", "headers": {"Cache-Control": "max-age=1800"}}
-                ]
-            }
-        },
-    )
-    print(response.content)
+    subprocess.run(["firebase", "use", worker_project_id])
+    subprocess.run(["firebase", "deploy", "--only", "hosting"])
+    # token = subprocess.check_output(["gcloud", "auth", "print-access-token"])
+    # response = requests.post(
+    #     url=f"https://firebasehosting.googleapis.com/v1beta1/sites/{worker_project_id}/versions",
+    #     headers={
+    #         "Content-Type": "application/json",
+    #         "Authorization": f"Bearer {token}",
+    #     },
+    #     data={
+    #         "config": {
+    #             "headers": [
+    #                 {"glob": "**", "headers": {"Cache-Control": "max-age=1800"}}
+    #             ]
+    #         }
+    #     },
+    # )
+    # print(response.content)
 
 
 print("start")

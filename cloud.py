@@ -123,7 +123,9 @@ def deploy(worker_project_id):
     print(f"Deploying...")
     try:
         output = subprocess.run(
-            ["firebase", "deploy"], capture_output=True, stdout=None
+            ["firebase", "deploy", "--only", "hosting,functions"],
+            capture_output=True,
+            stdout=None,
         )
         print(output.stdout)
         link = output[str(output.stdout).find("Hosting URL:") :]

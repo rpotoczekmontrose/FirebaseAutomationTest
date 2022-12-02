@@ -135,12 +135,15 @@ def deploy(worker_project_id):
 
 
 print("start")
-worker_name = get_free_worker_name()
-copy_storage(worker_name)
-uri_prefix = export_documents("terra-scouts-us")
-print("uri prefix: " + uri_prefix)
-db_cleanup(worker_name)
-import_documents(worker_name, uri_prefix)
-backup_cleanup(uri_prefix)
-deploy(worker_name)
-change_worker_state(worker_name, True)
+try:
+    worker_name = get_free_worker_name()
+    copy_storage(worker_name)
+    uri_prefix = export_documents("terra-scouts-us")
+    print("uri prefix: " + uri_prefix)
+    db_cleanup(worker_name)
+    import_documents(worker_name, uri_prefix)
+    backup_cleanup(uri_prefix)
+    deploy(worker_name)
+except:
+    if worker_name is not None:
+        change_worker_state(worker_name, True)

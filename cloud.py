@@ -135,3 +135,6 @@ try:
 except:
     if worker_name is not None:
         change_worker_state(worker_name, True)
+    else:
+        print("No free worker")
+        exit(1)

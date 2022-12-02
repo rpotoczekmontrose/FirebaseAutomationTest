@@ -118,10 +118,16 @@ def copy_storage(worker_name):
 
 
 def deploy(worker_project_id):
+    print(f"Setting project to deploy: {worker_project_id}")
     subprocess.run(["firebase", "use", worker_project_id])
-    output = subprocess.run(
-        ["firebase", "deploy", "--only", "hosting"], capture_output=True, stdout=None
-    )
+    print(f"Deploying...")
+    try:
+        output = subprocess.run(
+            ["firebase", "deploy"], capture_output=True, stdout=None
+        )
+    except subprocess.CalledProcessError as error:
+        print(error.output)
+        raise
     link = output[str(output.stdout).find("Hosting URL:") :]
     print(link)
     print(

@@ -119,7 +119,9 @@ def copy_storage(worker_name):
 
 def deploy(worker_project_id):
     subprocess.run(["firebase", "use", worker_project_id])
-    subprocess.run(["firebase", "deploy", "--only", "hosting"])
+    output = subprocess.check_output(["firebase", "deploy", "--only", "hosting"])
+    link = output[output.find("Hosting URL:") :]
+    subprocess.run(["gh", "pr", "comment", "--body", f"{link}"])
 
 
 print("start")
@@ -137,4 +139,5 @@ except:
         change_worker_state(worker_name, True)
     else:
         print("No free worker")
+        subprocess.run(["gh", "pr", "comment", "--body", "No free worker"])
         exit(1)

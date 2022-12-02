@@ -120,9 +120,9 @@ def copy_storage(worker_name):
 def deploy(worker_project_id):
     subprocess.run(["firebase", "use", worker_project_id])
     output = subprocess.check_output(["firebase", "deploy", "--only", "hosting"])
-    link = output[output.find("Hosting URL:") :]
-    print(link)
-    subprocess.run(["gh", "pr", "comment", "--body", f"{link}"])
+    # link = output[output.find("Hosting URL:") :]
+    print(output)
+    subprocess.run(["gh", "pr", "comment", "--body", f"{output}"])
 
 
 print("start")

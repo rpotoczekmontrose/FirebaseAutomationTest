@@ -84,14 +84,13 @@ def db_cleanup(worker_name):
     print("db cleanup")
     db = firestore.Client(project=worker_name)
     for coll_ref in db.collections():
-        db.collection().get()
         if "WorkerAvailability" in coll_ref.id:
             continue
         delete_collection(coll_ref, 100)
 
 
 def backup_cleanup(backup_location: str):
-    print("Storage Cleanup")
+    print("Temporary Backup Cleanup")
     parts = backup_location.split("/")
     time_stamp = parts[len(parts) - 1]
     backup_storage = storage.Client(project="terra-scouts-us")

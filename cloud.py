@@ -126,9 +126,9 @@ def deploy(worker_project_id):
             ["firebase", "deploy", "--debug", "--only", "hosting,functions"]
         )
         print(output)
-        link = output[output.find("URL:") :]
+        link = output[str(output).find("URL:") :]
         print(link)
-
+        print("Adding comment...")
         print(
             subprocess.check_output(["gh", "pr", "comment", "2", "--body", f"{link}"])
         )

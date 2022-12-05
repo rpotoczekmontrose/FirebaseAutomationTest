@@ -122,18 +122,22 @@ def deploy(worker_project_id):
     subprocess.run(["firebase", "use", worker_project_id])
     print(f"Deploying...")
     try:
-        output = subprocess.run(
-            ["firebase", "deploy", "--only", "hosting,functions"],
-            capture_output=True,
-            stdout=None,
+        print(
+            str(
+                output=subprocess.run(
+                    ["firebase", "deploy", "--only", "hosting,functions"],
+                    capture_output=True,
+                    stdout=None,
+                ).stdout
+            )
         )
-        print(output.stdout)
-        link = output[str(output.stdout).find("Hosting URL:") :]
-        print(link)
+        print("after deploy")
+        # link = output[str(output.stdout).find("Hosting URL:") :]
+        # print(link)
         print(
             str(
                 subprocess.run(
-                    ["gh", "pr", "comment", "--body", f"{link}"],
+                    ["gh", "pr", "comment", "--body", f"comment"],
                     capture_output=True,
                     stdout=None,
                 ).stdout
@@ -141,8 +145,8 @@ def deploy(worker_project_id):
         )
     except subprocess.CalledProcessError as error:
         print(error.output)
-    except:
-        print("other error")
+    except Exception as e:
+        print(e)
 
 
 print("start")

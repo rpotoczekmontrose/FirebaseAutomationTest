@@ -1,11 +1,7 @@
 from google.cloud import firestore_admin_v1
 from google.cloud import storage
-from google.cloud import firestore
-import requests
+from google.cloud import firestore_bundle
 import os
-from base64 import b64encode
-from nacl import encoding, public
-import json
 import subprocess
 
 workers_names = ["testproject2-151a9", "testproject-c1950"]
@@ -134,9 +130,10 @@ def deploy(worker_project_id):
         print(output)
         link = output[str(output).find("URL:") :]
         print(link)
-
+        link = link.replace("\n", "")
+        pr_number = os.environ["PR_NUMBER"]
         run_proc = subprocess.run(
-            ["gh", "pr", "comment", "1", "--body", f"{link}"],
+            ["gh", "pr", "comment", str(pr_number), "--body", f"{link}"],
             capture_output=True,
             stdout=None,
         )

@@ -141,7 +141,6 @@ def deploy(worker_project_id):
         )
     except subprocess.CalledProcessError as error:
         print(error.output)
-        raise
     except:
         print("other error")
 
@@ -156,7 +155,8 @@ try:
     import_documents(worker_name, uri_prefix)
     backup_cleanup(uri_prefix)
     deploy(worker_name)
-except:
+except Exception as e:
+    print(e)
     if worker_name is not None:
         print("restoring worker state")
         change_worker_state(worker_name, True)

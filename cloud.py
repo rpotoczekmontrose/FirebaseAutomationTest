@@ -124,7 +124,7 @@ def deploy(worker_project_id):
     try:
         output = str(
             subprocess.run(
-                ["firebase", "deploy", "--only", "hosting,functions"],
+                ["firebase", "deploy", "--debug", "--only", "hosting,functions"],
                 capture_output=True,
                 stdout=None,
             ).stdout

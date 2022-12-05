@@ -6,8 +6,10 @@
   "scripts": {
     "start": "app.js",
     "build": "echo \"Fake\""
-
   },
   "author": "Adem Cemil YALCIN",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "firebase-functions": "^4.1.0"
+  }
 }

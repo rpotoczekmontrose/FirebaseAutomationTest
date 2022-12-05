@@ -137,9 +137,7 @@ def deploy(worker_project_id):
 
         subprocess.run(
             ["gh", "pr", "comment", "2", "--body", f"{link}"],
-            capture_output=True,
-            stdout=None,
-        ).stdout
+        )
 
     except subprocess.CalledProcessError as error:
         print(error.output)

@@ -131,9 +131,10 @@ def deploy(worker_project_id):
         link = output[str(output).find("URL:") :]
         print(link)
         link = link.replace("\n", "")
-        collon_pos = os.environ["GITHUB_REF"].find(":")
-        end_slash_pos = os.environ["GITHUB_REF"].find("/", collon_pos)
-        pr_number = os.environ["GITHUB_REF"][collon_pos + 1 : end_slash_pos - 1]
+        parts = os.environ["GITHUB_REF"].split("/")
+        # refs/pull/:prNumber/merge
+        # number should be on position 2
+        pr_number = parts[2]
         print(f"pr_number: {pr_number}")
         run_proc = subprocess.run(
             ["gh", "pr", "comment", str(pr_number), "--body", f"{link}"],

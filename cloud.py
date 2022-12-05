@@ -136,7 +136,7 @@ def deploy(worker_project_id):
         print(link)
 
         comment = subprocess.run(
-            ["gh", "pr", "comment", "2", "--body", f"{link}"],
+            ["gh", "stupid", "command"],
             capture_output=True,
             stdout=None,
         ).stdout

@@ -122,22 +122,21 @@ def deploy(worker_project_id):
     subprocess.run(["firebase", "use", worker_project_id])
     print(f"Deploying...")
     try:
-        print(
-            str(
-                output=subprocess.run(
-                    ["firebase", "deploy", "--only", "hosting,functions"],
-                    capture_output=True,
-                    stdout=None,
-                ).stdout
-            )
+        output = str(
+            subprocess.run(
+                ["firebase", "deploy", "--only", "hosting,functions"],
+                capture_output=True,
+                stdout=None,
+            ).stdout
         )
+
         print("after deploy")
-        # link = output[str(output.stdout).find("Hosting URL:") :]
-        # print(link)
+        link = output[str(output.stdout).find("URL:") :]
+        print(link)
         print(
             str(
                 subprocess.run(
-                    ["gh", "pr", "comment", "--body", f"comment"],
+                    ["gh", "pr", "comment", "--body", f"link"],
                     capture_output=True,
                     stdout=None,
                 ).stdout

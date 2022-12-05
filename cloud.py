@@ -131,6 +131,7 @@ def deploy(worker_project_id):
         )
 
         print("after deploy")
+        print(output)
         link = output[str(output).find("URL:") :]
         print(link)
         print(

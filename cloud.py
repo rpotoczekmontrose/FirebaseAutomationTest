@@ -61,7 +61,7 @@ def export_documents(source_project_id="terra-scouts-us"):
 
     # Make the request
     print("Exporting...")
-    operation = client.export_documents(request=request)
+    operation = client.export_documents(request=request, timeout=60 * 60)
     return operation.result().output_uri_prefix
 
 

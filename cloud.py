@@ -136,10 +136,10 @@ def deploy(worker_project_id):
         print(link)
 
         comment = subprocess.run(
-            ["gh", "stupid", "command"],
+            ["gh", "pr", "comment", "2", "--body", f"{link}"],
             capture_output=True,
             stdout=None,
-        ).stdout
+        ).stderr
         print(comment)
     except subprocess.CalledProcessError as error:
         print(error.output)

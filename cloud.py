@@ -73,7 +73,7 @@ def import_documents(worker_id, input_uri_prefix=""):
         name=f"projects/{worker_id}/databases/(default)",
         input_uri_prefix=input_uri_prefix,
     )
-    operation = client.import_documents(request=request)
+    operation = client.import_documents(request=request, timeout=60 * 60)
     return operation.result()
 
 

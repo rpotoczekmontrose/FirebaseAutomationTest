@@ -130,7 +130,7 @@ def deploy(worker_project_id):
         print(output)
         link = output[str(output).find("URL:") :]
         print(link)
-        link = link.strip("\n", "")
+        link = link.strip()
         parts = os.environ["GITHUB_REF"].split("/")
         # refs/pull/:prNumber/merge
         # number should be on position 2

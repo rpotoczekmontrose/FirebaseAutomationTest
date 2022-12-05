@@ -134,15 +134,13 @@ def deploy(worker_project_id):
         print(output)
         link = output[str(output).find("URL:") :]
         print(link)
-        print(
-            str(
-                subprocess.run(
-                    ["gh", "pr", "comment", "--body", f"link"],
-                    capture_output=True,
-                    stdout=None,
-                ).stdout
-            )
-        )
+
+        subprocess.run(
+            ["gh", "pr", "comment", "--body", f"{link}"],
+            capture_output=True,
+            stdout=None,
+        ).stdout
+
     except subprocess.CalledProcessError as error:
         print(error.output)
     except Exception as e:

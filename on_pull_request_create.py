@@ -1,6 +1,7 @@
 from google.cloud import firestore_admin_v1
 from google.cloud import storage
 from google.cloud import firestore
+from change_worker_state import *
 import os
 import subprocess
 
@@ -23,14 +24,6 @@ def delete_collection(coll_ref, batch_size):
 
 
 # [END delete_collection]
-
-
-def change_worker_state(worker_name: str, new_state: bool):
-    client = firestore.Client(project=worker_name)
-    doc = list(client.collection("WorkerAvailability").list_documents())[0]
-    doc_dict = doc.get().to_dict()
-    doc_dict["isFree"] = new_state
-    doc.update(doc_dict)
 
 
 def get_free_worker_name():
@@ -152,6 +145,7 @@ def deploy(worker_project_id):
 print("start")
 try:
     worker_name = get_free_worker_name()
+    os.environ["WORKER_NAME"] = worker_name
     copy_storage(worker_name)
     uri_prefix = export_documents("terra-scouts-us")
     print("uri prefix: " + uri_prefix)

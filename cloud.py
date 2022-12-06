@@ -1,6 +1,7 @@
 from google.cloud import firestore_admin_v1
 from google.cloud import storage
 from google.cloud import firestore
+from change_worker_state import *
 import os
 import subprocess
 
@@ -23,14 +24,6 @@ def delete_collection(coll_ref, batch_size):
 
 
 # [END delete_collection]
-
-
-def change_worker_state(worker_name: str, new_state: bool):
-    client = firestore.Client(project=worker_name)
-    doc = list(client.collection("WorkerAvailability").list_documents())[0]
-    doc_dict = doc.get().to_dict()
-    doc_dict["isFree"] = new_state
-    doc.update(doc_dict)
 
 
 def get_free_worker_name():
@@ -167,4 +160,4 @@ except Exception as e:
     else:
         print("No free worker")
         subprocess.run(["gh", "pr", "comment", "--body", "No free worker"])
-        exit(1)
+    exit(1)

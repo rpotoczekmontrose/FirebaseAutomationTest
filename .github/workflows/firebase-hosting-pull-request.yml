@@ -38,6 +38,7 @@ jobs:
           python cloud.py
   cleanup:
     if: ${{ github.event.action == 'closed' }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - run: npm install -g firebase-tools

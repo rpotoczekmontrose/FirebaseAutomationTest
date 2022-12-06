@@ -4,10 +4,11 @@
 name: Deploy to Firebase Hosting on PR
 on:
   pull_request:
-    types: [opened, reopened, edited, synchronize]
+    types: [opened, reopened, edited, synchronize, closed]
 jobs:
   build_and_preview:
-    if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
+    if: |
+      github.event.action == 'opened' || github.event.action == 'reopened' || github.event.action == 'edited' || github.event.action == 'synchronize'
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -35,7 +36,29 @@ jobs:
             PR_NUMBER: ${{ github.event.pull_request.prNumber }}
         run: |
           python cloud.py
-      - name: Set Environment Variables
-        uses: ./.github/actions/setvars
+  cleanup:
+    if: ${{ github.event.action == 'closed' }}
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm install -g firebase-tools
+      - run: npm install firebase-functions
+      - run: npm ci && npm run build
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
         with:
-          varFilePath: ./.github/variables/myvars.env
+          credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
+      - name: setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8 #install the python needed
+      - name: Install Python dependencies
+        uses: py-actions/py-dependency-install@v4
+        with:
+          path: "requirements.txt"
+      - name: execute py script # run the run.py to get the latest data
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            PR_NUMBER: ${{ github.event.pull_request.prNumber }}
+        run: |
+          python pr_close.py

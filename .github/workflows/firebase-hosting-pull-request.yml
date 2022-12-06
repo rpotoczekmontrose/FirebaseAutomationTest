@@ -35,3 +35,7 @@ jobs:
             PR_NUMBER: ${{ github.event.pull_request.prNumber }}
         run: |
           python cloud.py
+      - name: Set Environment Variables
+        uses: ./.github/actions/setvars
+        with:
+          varFilePath: ./.github/variables/myvars.env

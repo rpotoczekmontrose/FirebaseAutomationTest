@@ -1,7 +1,7 @@
 from google.cloud import firestore_admin_v1
 from google.cloud import storage
 from google.cloud import firestore
-from change_worker_state import *
+from helpers import *
 import os
 import subprocess
 
@@ -32,7 +32,7 @@ def get_free_worker_name():
         doc = list(client.collection("WorkerAvailability").list_documents())[0]
         doc_dict = doc.get().to_dict()
         if doc_dict["isFree"] == True:
-            change_worker_state(worker_name, False)
+            set_worker_state(worker_name, False)
             return worker_name
         else:
             print("Worker: " + worker_name + " busy...")
@@ -124,11 +124,9 @@ def deploy(worker_project_id):
         link = output[str(output).find("URL:") :]
         print(link)
         link = link[: link.find("\n") - 2]
-        parts = os.environ["GITHUB_REF"].split("/")
-        # refs/pull/:prNumber/merge
-        # number should be on position 2
-        pr_number = parts[2]
-        print(f"pr_number: {pr_number}")
+        pr_number = get_pr_number()
+        env_name = "PR_" + pr_number
+        os.environ[env_name] = worker_project_id
         run_proc = subprocess.run(
             ["gh", "pr", "comment", str(pr_number), "--body", f"{link}"],
             capture_output=True,
@@ -157,7 +155,7 @@ except Exception as e:
     print(e)
     if worker_name is not None:
         print("restoring worker state")
-        change_worker_state(worker_name, True)
+        set_worker_state(worker_name, True)
         if uri_prefix is not None:
             backup_cleanup(uri_prefix)
     else:

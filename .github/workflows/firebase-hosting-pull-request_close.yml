@@ -10,6 +10,10 @@ jobs:
     if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
     runs-on: ubuntu-latest
     steps:
+      - name: Set Environment Variables
+        uses: ./.github/actions/setvars
+        with:
+          varFilePath: ./.github/variables/myvars.env
       - uses: actions/checkout@v2
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
@@ -29,4 +33,4 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             PR_NUMBER: ${{ github.event.pull_request.prNumber }}
         run: |
-          python cloud.py
+          python pr_close.py

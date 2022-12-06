@@ -1,3 +1,6 @@
-from change_worker_state import *
+from helpers import *
 
-change_worker_state("testproject2-151a9", True)
+pr_number = get_pr_number()
+env_name = "PR_" + pr_number
+worker_project_id = os.environ[env_name]
+set_worker_state(worker_project_id, True)

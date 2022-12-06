@@ -128,7 +128,7 @@ def deploy(worker_project_id):
         env_name = "PR_" + pr_number
 
         file1 = open("./.github/variables/myvars.env", "a")
-        file1.write(f"{env_name}: {worker_project_id}\n")
+        file1.write(f"{env_name}={worker_project_id}\n")
         file1.close()
         os.environ[env_name] = worker_project_id
         run_proc = subprocess.run(

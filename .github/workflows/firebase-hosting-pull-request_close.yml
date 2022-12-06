@@ -10,11 +10,11 @@ jobs:
     if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Set Environment Variables
         uses: ./.github/actions/setvars
         with:
           varFilePath: ./.github/variables/myvars.env
-      - uses: actions/checkout@v2
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v1'

@@ -146,6 +146,7 @@ print("start")
 try:
     worker_name = get_free_worker_name()
     copy_storage(worker_name)
+    uri_prefix = None
     uri_prefix = export_documents("terra-scouts-us")
     print("uri prefix: " + uri_prefix)
     db_cleanup(worker_name)
@@ -154,6 +155,8 @@ try:
     deploy(worker_name)
 except Exception as e:
     print(e)
+    if uri_prefix is not None:
+        backup_cleanup(uri_prefix)
     if worker_name is not None:
         print("restoring worker state")
         change_worker_state(worker_name, True)

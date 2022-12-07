@@ -11,9 +11,10 @@ def rerun_waiting_job():
             stdout=None,
         ).stdout
     )
+    print(pr_list)
     if len(pr_list) == 0:
         return
-    run_to_rerun = ""
+    run_to_rerun = None
     for pr in pr_list:
         pr_number = pr["number"]
         checks = str(
@@ -23,14 +24,19 @@ def rerun_waiting_job():
                 stdout=None,
             ).stdout
         ).splitlines()
+        print(checks)
         for check in checks:
             if "build_and_preview" in check and "fail" in check:
                 run_to_rerun = check[
                     check.find("runs/") + len("runs/") + 1 : check.find("/jobs") - 1
                 ]
+                print(run_to_rerun)
                 break
             else:
                 continue
+    if run_to_rerun is None:
+        print("Nothing to rerun")
+        return
     output = subprocess.run(
         ["gh", "run", "rerun", f"{run_to_rerun}"],
         capture_output=True,

@@ -18,7 +18,7 @@ def rerun_waiting_job():
             print(f"curr pr num: {pr_number}")
             try:
                 # for some reason it returns exit code 1 instead of 0...
-                output = subprocess.check_output(["gh", "pr", "checks", f"{pr_number}"])
+                output = subprocess.run(["gh", "pr", "checks", f"{pr_number}"]).stderr
             except:
                 pass
             print(f"output: {output}")

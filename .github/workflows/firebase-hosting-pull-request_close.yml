@@ -4,12 +4,10 @@
 name: Deploy to Firebase Hosting on PR
 on:
   pull_request:
-    types: [opened, reopened, edited, synchronize]
+    types: [closed]
 jobs:
-  build_and_preview:
+  cleanup:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
     steps:
       - uses: actions/checkout@v2
       - run: npm install -g firebase-tools
@@ -28,9 +26,9 @@ jobs:
         uses: py-actions/py-dependency-install@v4
         with:
           path: "requirements.txt"
-      - name: execute py script # run the run.py to get the latest data
+      - name: execute py script
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             PR_NUMBER: ${{ github.event.pull_request.prNumber }}
         run: |
-          python cloud.py
+          python pr_close.py

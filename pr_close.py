@@ -20,8 +20,8 @@ def rerun_waiting_job():
             try:
                 # for some reason it returns exit code 1 instead of 0...
                 output = subprocess.check_output(["gh", "pr", "checks", f"{pr_number}"])
-            except:
-                pass
+            except Exception as e:
+                output = e
             print(f"output: {output}")
             decoded = output.decode()
             print(f"decoded: {decoded}")

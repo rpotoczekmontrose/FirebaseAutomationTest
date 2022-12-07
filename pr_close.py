@@ -5,11 +5,11 @@ import json
 
 def rerun_waiting_job():
     pr_list = json.loads(
-        subprocess.run(
+        subprocess.check_output(
             ["gh", "pr", "list", "--json", "number"],
             capture_output=True,
             stdout=None,
-        ).stdout
+        )
     )
     print(pr_list)
     if len(pr_list) == 0:
@@ -18,11 +18,11 @@ def rerun_waiting_job():
     for pr in pr_list:
         pr_number = pr["number"]
         checks = str(
-            subprocess.run(
+            subprocess.check_output(
                 ["gh", "pr", "checks", f"{pr_number}"],
                 capture_output=True,
                 stdout=None,
-            ).stdout
+            )
         ).splitlines()
         print(checks)
         for check in checks:

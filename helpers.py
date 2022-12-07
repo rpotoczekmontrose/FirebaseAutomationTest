@@ -1,7 +1,7 @@
 from google.cloud import firestore
 import os
 
-workers_names = ["testproject2-151a9", "testproject-c1950"]
+workers_names = ["testproject-c1950", "testproject2-151a9"]
 
 
 def _set_worker_data(worker_name: str, pr_number: int):

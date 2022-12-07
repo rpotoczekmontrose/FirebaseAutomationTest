@@ -16,17 +16,12 @@ def rerun_waiting_job():
             print(f"pr: {pr}")
             pr_number = pr["number"]
             print(f"curr pr num: {pr_number}")
-            output = "not really"
+            decoded = None
             try:
                 # for some reason it returns exit code 1 instead of 0...
-                output = subprocess.check_output(["gh", "pr", "checks", f"{pr_number}"])
+                subprocess.check_output(["gh", "pr", "checks", f"{pr_number}"])
             except subprocess.CalledProcessError as error:
-                print(error.output)
-            except Exception as e:
-                output = e
-            print(f"output: {output}")
-            decoded = output.decode()
-            print(f"decoded: {decoded}")
+                decoded = error.output.decode()
             checks = decoded.splitlines()
             print(checks)
             for check in checks:

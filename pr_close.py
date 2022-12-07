@@ -36,6 +36,8 @@ def rerun_waiting_job():
         )
         print(output.stdout)
         print(output.stderr)
+    except subprocess.CalledProcessError as error:
+        print(error.output)
     except Exception as e:
         print(e)
 

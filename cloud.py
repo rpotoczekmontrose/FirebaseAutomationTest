@@ -5,7 +5,6 @@ from helpers import *
 import os
 import subprocess
 
-workers_names = ["testproject2-151a9", "testproject-c1950"]
 
 # [START delete_collection]
 def delete_collection(coll_ref, batch_size):
@@ -24,18 +23,6 @@ def delete_collection(coll_ref, batch_size):
 
 
 # [END delete_collection]
-
-
-def get_free_worker_name():
-    for worker_name in workers_names:
-        client = firestore.Client(project=worker_name)
-        doc = list(client.collection("WorkerAvailability").list_documents())[0]
-        doc_dict = doc.get().to_dict()
-        if doc_dict["isFree"] == True:
-            set_worker_state(worker_name, False)
-            return worker_name
-        else:
-            print("Worker: " + worker_name + " busy...")
 
 
 def export_documents(source_project_id="terra-scouts-us"):

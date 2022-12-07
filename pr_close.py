@@ -15,7 +15,9 @@ def rerun_waiting_job():
         for pr in pr_list:
             pr_number = pr["number"]
             checks = str(
-                subprocess.check_output(["gh", "pr", "checks", f"{pr_number}"])
+                subprocess.check_output(["gh", "pr", "checks", f"{pr_number}"]).decode(
+                    "utf-8"
+                )
             ).splitlines()
             print(checks)
             for check in checks:

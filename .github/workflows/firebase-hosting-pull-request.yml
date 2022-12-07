@@ -7,6 +7,8 @@ on:
     types: [opened, reopened, edited, synchronize]
 jobs:
   build_and_preview:
+    if: |
+      github.event.action == 'opened' || github.event.action == 'reopened' || github.event.action == 'edited' || github.event.action == 'synchronize'
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write

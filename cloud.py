@@ -131,7 +131,7 @@ def deploy(worker_project_id):
 print("start")
 try:
     uri_prefix = None
-    worker_name = get_free_worker_name()
+    worker_name = get_worker_name()
     copy_storage(worker_name)
     uri_prefix = export_documents("terra-scouts-us")
     print("uri prefix: " + uri_prefix)

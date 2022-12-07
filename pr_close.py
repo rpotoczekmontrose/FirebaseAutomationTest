@@ -13,7 +13,9 @@ def rerun_waiting_job():
             return
         run_to_rerun = None
         for pr in pr_list:
+            print(f"pr: {pr}")
             pr_number = pr["number"]
+            print(f"curr pr num: {pr_number}")
             output = subprocess.check_output(["gh", "pr", "checks", f"{pr_number}"])
             print(f"output: {output}")
             decoded = output.decode()

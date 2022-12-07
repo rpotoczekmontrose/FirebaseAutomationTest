@@ -12,7 +12,7 @@ def _set_worker_data(worker_name: str, pr_number: int):
     doc.update(doc_dict)
 
 
-def _get_workers_dict() -> dict:
+def _get_workers_dict() -> dict[str, int]:
     client = firestore.Client(project=workers_names[0])
     doc = list(client.collection("WorkerAvailability").list_documents())[0]
     doc_dict = doc.get().to_dict()
@@ -20,8 +20,8 @@ def _get_workers_dict() -> dict:
 
 
 def free_worker():
-    current_pr_number = int(get_pr_number())
-    for worker_name, pr_number in _get_workers_dict():
+    current_pr_number = get_pr_number()
+    for worker_name, pr_number in _get_workers_dict().items():
         if pr_number == current_pr_number:
             set_worker_state(worker_name, True)
 
@@ -35,13 +35,13 @@ def set_worker_state(worker_name: str, is_free: bool):
     _set_worker_data(worker_name, -1 if is_free is True else get_pr_number())
 
 
-def get_pr_number() -> str:
+def get_pr_number() -> int:
     parts = os.environ["GITHUB_REF"].split("/")
     # refs/pull/:prNumber/merge
     # number should be on position 2
     pr_number = parts[2]
     print(f"pr_number: {pr_number}")
-    return pr_number
+    return int(pr_number)
 
 
 def get_free_worker_name():

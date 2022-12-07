@@ -27,7 +27,7 @@ def rerun_waiting_job():
             for check in checks:
                 if "build_and_preview" in check and "fail" in check:
                     run_to_rerun = check[
-                        check.find("runs/") + len("runs/") + 1 : check.find("/jobs") - 1
+                        check.find("runs/") + len("runs/") : check.find("/jobs")
                     ]
                     print(run_to_rerun)
                     break

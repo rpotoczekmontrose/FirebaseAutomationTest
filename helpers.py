@@ -16,7 +16,7 @@ def _get_workers_dict() -> dict:
     client = firestore.Client(project=workers_names[0])
     doc = list(client.collection("WorkerAvailability").list_documents())[0]
     doc_dict = doc.get().to_dict()
-    return doc_dict["workersData"]
+    return dict(doc_dict["workersData"])
 
 
 def free_worker():

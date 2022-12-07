@@ -16,7 +16,7 @@ def _get_workers_dict() -> dict:
     client = firestore.Client(project=workers_names[0])
     doc = list(client.collection("WorkerAvailability").list_documents())[0]
     doc_dict = doc.get().to_dict()
-    return dict(doc_dict["workersData"])
+    return doc_dict["workersData"]
 
 
 def free_worker():
@@ -45,7 +45,7 @@ def get_pr_number() -> str:
 
 
 def get_free_worker_name():
-    for worker_name, pr_number in _get_workers_dict.items():
+    for worker_name, pr_number in _get_workers_dict().items():
         if pr_number != -1:
             print("Worker: " + worker_name + " busy...")
             continue

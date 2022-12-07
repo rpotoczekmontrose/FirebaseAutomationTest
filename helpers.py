@@ -44,7 +44,7 @@ def get_pr_number() -> int:
     return int(pr_number)
 
 
-def get_free_worker_name():
+def _get_free_worker_name():
     for worker_name, pr_number in _get_workers_dict().items():
         if pr_number != -1:
             print("Worker: " + worker_name + " busy...")
@@ -55,3 +55,11 @@ def get_free_worker_name():
         if doc_dict["isFree"] == True:
             set_worker_state(worker_name, False)
             return worker_name
+
+
+def get_worker_name():
+    current_pr_number = get_pr_number()
+    for worker_name, pr_number in _get_workers_dict().items():
+        if pr_number == current_pr_number:
+            return worker_name
+    return _get_free_worker_name()

@@ -14,11 +14,11 @@ def rerun_waiting_job():
         run_to_rerun = None
         for pr in pr_list:
             pr_number = pr["number"]
-            checks = (
-                subprocess.check_output(["gh", "pr", "checks", f"{pr_number}"])
-                .decode()
-                .splitlines()
-            )
+            output = subprocess.check_output(["gh", "pr", "checks", f"{pr_number}"])
+            print(f"output: {output}")
+            decoded = output.decode()
+            print(f"decoded: {decoded}")
+            checks = decoded.splitlines()
             print(checks)
             for check in checks:
                 if "build_and_preview" in check and "fail" in check:

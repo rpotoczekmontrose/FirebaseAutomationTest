@@ -12,7 +12,7 @@ def _set_worker_data(worker_name: str, pr_number: int):
     doc.update(doc_dict)
 
 
-def _get_workers_dict() -> dict[str, int]:
+def _get_workers_dict():
     client = firestore.Client(project=workers_names[0])
     doc = list(client.collection("WorkerAvailability").list_documents())[0]
     doc_dict = doc.get().to_dict()

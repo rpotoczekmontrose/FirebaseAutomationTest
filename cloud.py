@@ -1,6 +1,7 @@
 from google.cloud import firestore_admin_v1
 from google.cloud import storage
 from google.cloud import firestore
+from firebase_admin.auth import *
 from helpers import *
 import os
 import subprocess
@@ -126,6 +127,11 @@ def deploy(worker_project_id):
         print(e)
 
 
+def cleanup_auths():
+    users_id = [user.uid for user in list_users().users]
+    delete_users(users_id)
+
+
 def export_auths():
     run_proc = subprocess.run(
         ["firebase", "use", "terra-scouts-us"],
@@ -145,6 +151,7 @@ def import_auths(worker_name):
         capture_output=True,
         stdout=None,
     )
+    cleanup_auths()
     run_proc = subprocess.run(
         ["firebase", "auth:import", "auths.json"],
         capture_output=True,

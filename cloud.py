@@ -126,10 +126,38 @@ def deploy(worker_project_id):
         print(e)
 
 
+def export_auths():
+    run_proc = subprocess.run(
+        ["firebase", "use", "terra-scouts-us"],
+        capture_output=True,
+        stdout=None,
+    )
+    run_proc = subprocess.run(
+        ["firebase", "auth:export", "auths.json", "--format=json"],
+        capture_output=True,
+        stdout=None,
+    )
+
+
+def import_auths(worker_name):
+    run_proc = subprocess.run(
+        ["firebase", "use", worker_name],
+        capture_output=True,
+        stdout=None,
+    )
+    run_proc = subprocess.run(
+        ["firebase", "auth:import", "auths.json"],
+        capture_output=True,
+        stdout=None,
+    )
+
+
 print("start")
 try:
     uri_prefix = None
     worker_name = get_worker_name()
+    export_auths()
+    import_auths(worker_name)
     copy_storage(worker_name)
     uri_prefix = export_documents("terra-scouts-us")
     print("uri prefix: " + uri_prefix)

@@ -44,6 +44,7 @@ def get_pr_number() -> int:
     # pr_number = parts[2]
     # print(f"pr_number: {pr_number}")
     num = os.environ["PR_NUMBER"]
+    print(num)
     return int(num)
 
 

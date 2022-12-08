@@ -174,5 +174,10 @@ except Exception as e:
             backup_cleanup(uri_prefix)
     else:
         print("No free worker")
-        subprocess.run(["gh", "pr", "comment", "--body", "No free worker"])
+        pr_number = get_pr_number()
+        run_proc = subprocess.run(
+            ["gh", "pr", "comment", str(pr_number), "--body", "No free worker"],
+            capture_output=True,
+            stdout=None,
+        )
     exit(1)

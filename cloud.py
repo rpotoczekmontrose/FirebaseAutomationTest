@@ -129,7 +129,7 @@ def deploy(worker_project_id):
 
 
 def cleanup_auths(worker_name):
-    initialize_app(projectId=worker_name)
+    initialize_app(options={"projectId": worker_name})
     users_id = [user.uid for user in list_users().users]
     delete_users(users_id)
 

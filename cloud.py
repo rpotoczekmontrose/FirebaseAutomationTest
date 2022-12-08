@@ -112,9 +112,7 @@ def deploy(worker_project_id):
         print(link)
         link = link[: link.find("\n") - 2]
         pr_number = get_pr_number()
-        env_name = "PR_" + pr_number
 
-        os.environ[env_name] = worker_project_id
         run_proc = subprocess.run(
             ["gh", "pr", "comment", str(pr_number), "--body", f"{link}"],
             capture_output=True,

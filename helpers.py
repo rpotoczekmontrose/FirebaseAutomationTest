@@ -43,7 +43,8 @@ def get_pr_number() -> int:
     # # number should be on position 2
     # pr_number = parts[2]
     # print(f"pr_number: {pr_number}")
-    return int(os.environ["PR_NUMBER"])
+    num = os.environ["PR_NUMBER"]
+    return int(num)
 
 
 def _get_free_worker_name():

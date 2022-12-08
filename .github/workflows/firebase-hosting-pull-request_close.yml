@@ -30,6 +30,6 @@ jobs:
       - name: execute py script
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            PR_NUMBER: ${{ github.event.pull_request.prNumber }}
+            PR_NUMBER: ${{ github.event.number }}
         run: |
           python pr_close.py

@@ -36,14 +36,8 @@ def set_worker_state(worker_name: str, is_free: bool):
 
 
 def get_pr_number() -> int:
-    parts = os.environ["GITHUB_REF"].split("/")
-    gref = os.environ["GITHUB_REF"]
-    print(f"GITHUB_REF: {gref}")
-    # refs/pull/:prNumber/merge
-    # number should be on position 2
-    pr_number = parts[2]
-    print(f"pr_number: {pr_number}")
-    return int(pr_number)
+    os_num = os.environ["PR_NUMBER"]
+    return int(os_num)
 
 
 def _get_free_worker_name():
